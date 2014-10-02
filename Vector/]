@@ -50,7 +50,6 @@ public:
 	{ return data_[n]; }
 	reference operator[](size_type n)const
 	{ return data_[n]; }
-	Vector &operator=(const Vector &v);
 private:
 	/** base function **/
 	void create();
@@ -73,18 +72,7 @@ private:
 
 
 
-/** overload **/
 
-template<typename T, typename Alloc>
-Vector<T, Alloc> &Vector<T, Alloc>:: operator=(const Vector &v)
-{
-	if(this != &v)	
-	{
-		uncreate();	
-		create(v.begin(), v.end());
-	}
-	//return *this;//this sentence is not necessary
-}
 
 /** base fucntion **/
 template<typename T, typename Alloc>
@@ -120,10 +108,10 @@ void Vector<T, Alloc>::create(size_type n, const T& val)
 
 template<typename T, typename Alloc>
 template<typename In>
-void Vector<T, Alloc>::create(In i, In j)
+void Vector<T, Alloc>::create(In, In)
 {
 	data_ = alloc_.allocate(j-i);
-	avail_ = limit_ = uninitialized_copy(i, j, data_);
+	avail_ = limit_ = std::uninitialized(i, j, data_);
 }
 
 
