@@ -1,1 +1,4 @@
 It is my STL implementation
+
+i gonna finish Vector with iterator & reverse_iterator both in normal & const version
+now it is just without iterator 2014/10/2
