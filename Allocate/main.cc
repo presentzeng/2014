@@ -20,13 +20,20 @@ public:
 int main()
 {
 	allocator<Test>alloc;
-	Test * pt = alloc.allocate(3);	
+	Test * pt = alloc.allocate(1);	
 	alloc.construct(pt, Test());	
-	alloc.construct(pt+1, Test());	
-	alloc.construct(pt+2, Test());	
 	alloc.destroy(pt);
-	alloc.destroy(pt+1);
-	alloc.destroy(pt+2);
-	
-	alloc.deallocate(pt, 3);	
+	alloc.deallocate(pt, 1);
+	pt = NULL;
+	if(pt)
+	{
+		cout << "NuLL\n" ;
+	}
+	//alloc.construct(pt+1, Test());	
+	//alloc.construct(pt+2, Test());	
+	//alloc.destroy(pt);
+	//alloc.destroy(pt+1);
+	//alloc.destroy(pt+2);
+	//
+	//alloc.deallocate(pt, 3);	
 }
