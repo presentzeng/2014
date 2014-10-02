@@ -4,7 +4,10 @@ using namespace std;
 int main()
 {
 	Vector<int>vec(4, 99);
-	Vector<int>ve = vec;
-	
-	cout << ve.size() << endl;
+	for(Vector<int>::iterator it = vec.begin();
+	it != vec.end();
+	it++)
+	{
+		cout << *it << endl;
+	}
 }
