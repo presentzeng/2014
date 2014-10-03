@@ -1,6 +1,7 @@
 #ifndef _vec_
 #define _vec_
 #include <stdlib.h>
+#include <stddef.h>
 #include <iostream>
 #include <memory>
 #include <stdint.h>
@@ -19,7 +20,7 @@ public:
 	typedef const T* const_pointer;
 	typedef int32_t size_type;
 	typedef Alloc allocator_type;
-
+	typedef ptrdiff_t difference_type;
 public:
 	/**constructor **/
 	Vector(){ create();}
@@ -30,6 +31,16 @@ public:
 	{ create(v.begin(), v.end());}
 	/** member function **/
 	void push_back(const T&);
+	/** insert **/
+	iterator insert(iterator po, const value_type &val);
+	void insert(iterator po, size_type n, const value_type &v);	
+	template<typename In>
+	void insert(iterator po, In fist, In last);	
+
+	/** erase **/
+	iterator erase(iterator po);	
+	iterator erase(iterator fi, iterator la);
+
 	iterator begin(){ return data_; }
 	iterator begin()const{ return data_; }
 
@@ -151,10 +162,74 @@ void Vector<T, Alloc>::add(const T&val)
 
 /** member function **/
 template<typename T, typename Alloc>
+typename Vector<T, Alloc>::iterator 
+Vector<T, Alloc>::insert(iterator po, const value_type &val)
+{
+	difference_type pos = po - data_;
+	insert(po, 1, val);	
+}
+
+
+template<typename T, typename Alloc>
+void Vector<T, Alloc>::
+insert(iterator po, size_type n, const value_type &v)	
+{
+	difference_type pos = po - data_;
+	while(static_cast<size_type>(limit_ - avail_) < n)
+	{ expand();}
+	po = data_ + pos;
+	size_type len = avail_ - po;
+	uninitialized_copy(po, po + len, po + n);
+	uninitialized_fill(po, po + n, v);
+	avail_ += n;
+	
+}
+
+
+template<typename T, typename Alloc>
+template<typename In>
+void Vector<T, Alloc>::
+insert(iterator po, In first, In last)	
+{
+	difference_type pos = po - data_;
+	size_type n = last -first;
+	while(static_cast<size_type>(limit_ - avail_) < n)
+	{ expand();}
+	po = data_ + pos;
+	size_type len = avail_ - po;
+	uninitialized_copy(po, po + len, po + n);
+	copy(first, last, po);
+	//uninitialized_fill(po, po + n, v);
+	
+	avail_ += n;
+
+}
+
+template<typename T, typename Alloc>
+typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator po)	
+{
+	copy(po + 1, avail_, po);	
+	alloc_.destroy(--avail_);
+	//return position;	
+}
+
+template<typename T, typename Alloc>
+typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator first, iterator last)
+{
+	difference_type len = avail_ - last;
+	copy(last, avail_, first);
+	
+	iterator it(first + len);	
+
+	while(avail_ != it)
+		alloc_.destroy(--avail_);
+}
+
+template<typename T, typename Alloc>
 void Vector<T, Alloc>::push_back(const T&t)
 {
 	if(avail_ == limit_ )//full
-		expand();			
+		expand();
 	add(t);
 }
 
