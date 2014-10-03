@@ -11,11 +11,14 @@
 template<typename T, typename Alloc = std::allocator<T> >
 class Vector
 {
+	class reverse_iterator;
 public:
+ 	typedef  reverse_iterator reverse_iterator;//why
 	typedef T value_type;
 	typedef T* iterator;
 	typedef const T* const_iterator;
 	typedef T& reference;
+	typedef const T& const_reference;
 	typedef T* pointer;
 	typedef const T* const_pointer;
 	typedef int32_t size_type;
@@ -40,7 +43,7 @@ public:
 	/** erase **/
 	iterator erase(iterator po);	
 	iterator erase(iterator fi, iterator la);
-
+	void resize(size_type n, value_type t= value_type());
 	iterator begin(){ return data_; }
 	iterator begin()const{ return data_; }
 
@@ -71,6 +74,7 @@ private:
 	void expand();	
 	void add(const T&);
 	void uncreate();
+	void expandToN(size_type n);				
 private:
 	/** member value **/
 	iterator data_;//first
@@ -78,6 +82,46 @@ private:
 	iterator limit_;//last memory
 
 	std::allocator<T> alloc_;//tool
+	/** reverse_iterator **/
+private:
+class reverse_iterator
+{
+private:
+	iterator current_;
+public:
+	reverse_iterator(iterator it = NULL)
+	:current_(it){}
+
+	reverse_iterator &operator++()
+	{ --current_; return *this;}	
+	reverse_iterator &operator++(int)
+	{
+		reverse_iterator temp(*this);
+		 --current_;
+		 return temp;
+	}	
+	
+
+	reverse_iterator &operator--()
+	{ ++current_; return *this;}	
+	reverse_iterator &operator--(int)
+	{
+		reverse_iterator temp(*this);
+		 ++current_;
+		 return temp;
+	}	
+
+	reference operator*()
+	{ return *(current_ - 1);}	
+	const_reference operator*()const
+	{ return *(current_ - 1);}	
+
+	pointer operator->()
+	{ return current_ - 1; }
+	const_pointer operator->()const
+	{ return current_ - 1; }
+};//class reverse_iterator	
+
 };//class Vector
 
 
@@ -98,6 +142,20 @@ Vector<T, Alloc> &Vector<T, Alloc>:: operator=(const Vector &v)
 }
 
 /** base fucntion **/
+
+template<typename T, typename Alloc>
+void Vector<T, Alloc>::expandToN(size_type n)
+{
+	iterator new_data = alloc_.allocate(n);
+	iterator new_avail = std::uninitialized_copy(data_, avail_, new_data);
+	
+	uncreate();
+	data_ = new_data;
+	avail_ = new_avail;
+	limit_ = data_ + n;
+}
+
+
 template<typename T, typename Alloc>
 void Vector<T, Alloc>::uncreate()
 {
@@ -161,6 +219,31 @@ void Vector<T, Alloc>::add(const T&val)
 }
 
 /** member function **/
+template<typename T, typename Alloc>
+void Vector<T, Alloc>::
+resize(size_type n, value_type val)
+{
+	size_type current_size = size();
+	if(n < current_size)
+	{
+		size_type diff = current_size - n;
+		while(diff--)
+			alloc_.destroy(--avail_);
+	}
+	else if(n > current_size)	
+	{
+		size_type diff = n - current_size;
+		size_type left = static_cast<size_type>(limit_ - avail_);
+		if(left < diff)		
+			expandToN(n);				
+
+
+		while(size() < n)
+			add(val);
+	}
+}
+
+
 template<typename T, typename Alloc>
 typename Vector<T, Alloc>::iterator 
 Vector<T, Alloc>::insert(iterator po, const value_type &val)
