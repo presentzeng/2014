@@ -1,2 +1,12 @@
 Unfinished job: rbegin() rend() const_iterator 
 2014/10/3 21:40
+
+when you input Vector<int>vec(10, 10);
+it will call 
+template<typename In, typename In>
+Vector<In, In>
+instead of
+Vector(size_type n, const T& val);
+
+i will fix it
+2014 10/4
