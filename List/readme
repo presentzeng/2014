@@ -1,0 +1,3 @@
+it is an implementation of list in kernel
+source code path : kernel/include/linux/list.h
+mainly it is implemented by Macro

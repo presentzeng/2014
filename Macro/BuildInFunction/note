@@ -1,0 +1,7 @@
+this is build in function y
+for example
+if(__build_expect(x, 0))
+	foo();
+
+this indicates that we do not expect to call foo
+since we expect x to be zero

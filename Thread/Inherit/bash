@@ -1,0 +1,26 @@
+
+frm()
+{
+	for i in .*
+	do
+	if [ $i != ".git" ]
+	then
+		rm $i -rf
+	fi
+	done
+}
+if test -f test
+then
+	clear
+	./test
+	echo "\n---------------------"
+	read choice
+	rm test -rf
+	frm
+	clear 
+else
+	echo "\n---------------------"
+	read choice
+	rm test -rf
+	clear
+fi

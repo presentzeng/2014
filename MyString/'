@@ -1,0 +1,56 @@
+#include "head.h"
+using namespace std;
+/** constructor **/
+String::String()
+{
+	str_ = new char;
+	*str_ = 0;
+	len_ = 0;	
+}
+String::String(char * arr)
+:str_(new char[strlen(arr) + 1])//add one for '\0'
+{
+	
+	strcpy(str_, arr);	
+	len_ = strlen(str_);
+}
+
+String::String(const char * arr)
+:str_(new char[strlen(arr) + 1])
+{
+	strcpy(str_, arr);	
+	len_ = strlen(str_);
+}
+/** destructor **/
+String::~String()
+{
+	delete[] str_;
+	len_ = 0;
+}
+/** copy constructor & assiment **/
+String::String(String & obj)
+{
+
+}
+/** print **/
+void String::p()
+{
+	int index = 0;
+	while(index < len_)
+	{
+		cout << str_[index] << endl;
+		index++;
+	}
+}
+/** overload **/
+
+void String::operator += (String &obj)
+{
+	cout << obj.size();	
+	//char * src = new char[obj.size()];
+	cout << "here" <<endl;
+	//strcpy(src, str_);
+	//strcat(src, obj.str_);
+	//delete[] str_;	
+	//str_ = src;
+}

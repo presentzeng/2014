@@ -1,0 +1,43 @@
+#ifndef _stack_
+#define _stack_
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+
+template<typename T, typename CONT = std::vector<T> >//default parameter
+class Stack
+{
+private:
+	//std::vector<T>elem_;
+	CONT elem_;
+public:
+	void push(const T &t);
+	void pop();
+	T top()const;
+	bool empty() const
+	{ return elem_.empty();}
+};
+
+template<typename T, typename CONT>
+void Stack<T, CONT>::push(const T &t)
+{
+	elem_.push_back(t);
+}
+
+template<typename T, typename CONT>
+void Stack<T, CONT>::pop()
+{
+	if(elem_.empty())
+		throw std::out_of_range("out of range");
+	elem_.pop_back();
+}
+template<typename T, typename CONT>
+T Stack<T, CONT>::top()const
+{
+	if(elem_.empty())
+		throw std::out_of_range("o");
+	return elem_.back();
+}
+
+#endif /*_stack_*/
+

@@ -1,0 +1,1 @@
+g++ -o test MyString.cc MyString.h main.cc

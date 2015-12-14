@@ -1,0 +1,26 @@
+
+fsm()
+{
+	for i in .*
+	do
+	if [ $i != ".git" ]
+	then
+	rm -rf $i 
+	fi
+	done
+}
+
+if test -f test
+then
+	clear
+	./test	
+	echo "\n---------------"
+	read choice	
+	fsm
+	rm test
+	clear
+else
+	read choice
+	fsm 
+	clear	
+fi

@@ -1,0 +1,4 @@
+test:
+	without cache : 1524 us
+	with cache : 1207 us
+	without recursion : 1119 us
